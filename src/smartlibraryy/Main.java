@@ -6,7 +6,7 @@ package smartlibraryy;
 
 /**
  *
- * @author Legion
+ * @author Legion (fathir)
  */
 public class Main {
 
