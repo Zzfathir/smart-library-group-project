@@ -6,7 +6,7 @@ package smartlibraryy;
 
 /**
  *
- * @author fathir
+ * @author
  */
 public interface LibraryADT {
     void addBook(int isbn, String title, String author);

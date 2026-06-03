@@ -18,4 +18,12 @@ public class Book {
         this.title = title;
         this.author = author;
     }
+    
+    
+    //fathir: getter functions
+    public int getIsbn() {return isbn;}
+    
+    public String getTitle() {return title;}
+    
+    public String getAuthor() {return author;}
 }
