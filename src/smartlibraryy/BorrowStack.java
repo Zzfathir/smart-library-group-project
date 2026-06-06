@@ -26,4 +26,13 @@ public class BorrowStack {
             }
         }
     }
+
+    public Book remove(int isbn) {
+        for (int i = stack.size() - 1; i >= 0; i--) {
+            if (stack.get(i).getIsbn() == isbn) {
+                return stack.remove(i);
+            }
+        }
+        return null;
+    }
 }

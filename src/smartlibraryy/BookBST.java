@@ -35,4 +35,33 @@ public class BookBST {
             return r;
         return (i < r.isbn) ? sea(r.left, i) : sea(r.right, i);
     }
+
+    public void delete(int isbn) {
+        root = del(root, isbn);
+    }
+
+    private Book del(Book r, int isbn) {
+        if (r == null) return null;
+
+        if (isbn < r.isbn) {
+            r.left = del(r.left, isbn);
+        } else if (isbn > r.isbn) {
+            r.right = del(r.right, isbn);
+        } else {
+            if (r.left == null) return r.right;
+            if (r.right == null) return r.left;
+
+            Book successor = findMin(r.right);
+            r.isbn   = successor.isbn;
+            r.title  = successor.title;
+            r.author = successor.author;
+            r.right  = del(r.right, successor.isbn);
+        }
+        return r;
+    }
+
+    private Book findMin(Book r) {
+        while (r.left != null) r = r.left;
+        return r;
+    }
 }
