@@ -12,11 +12,7 @@ public class SmartLibrary implements LibraryADT {
     private BookBST catalogue = new BookBST();
     private BorrowStack history = new BorrowStack();
 
-    // -------------------------------------------------------
-    // These 3 methods below are NOT your part.
-    // They are here just so the class compiles.
-    // Your teammates should fill these in.
-    // -------------------------------------------------------
+   
     @Override
     public void addBook(int isbn, String title, String author) {
         catalogue.insert(isbn, title, author);
@@ -38,10 +34,6 @@ public class SmartLibrary implements LibraryADT {
         System.out.println("  --- Borrowing History (Most Recent First) ---");
         history.show();
     }
-
-    // ======================================================
-    // YOUR PART — ADMIN LOGIC
-    // ======================================================
 
     @Override
     public void borrowBook(int isbn) {
@@ -68,10 +60,7 @@ public class SmartLibrary implements LibraryADT {
         }
     }
 
-    // ======================================================
-    // END OF YOUR PART
-    // ======================================================
-
+   
     public void runMenu() {
         Scanner sc = new Scanner(System.in);
 
