@@ -12,11 +12,7 @@ public class SmartLibrary implements LibraryADT {
     private BookBST catalogue = new BookBST();
     private BorrowStack history = new BorrowStack();
 
-    // -------------------------------------------------------
-    // These 3 methods below are NOT your part.
-    // They are here just so the class compiles.
-    // Your teammates should fill these in.
-    // -------------------------------------------------------
+   
     @Override
     public void addBook(int isbn, String title, String author) {
         catalogue.insert(isbn, title, author);
@@ -39,17 +35,13 @@ public class SmartLibrary implements LibraryADT {
         history.show();
     }
 
-    // ======================================================
-    // YOUR PART — ADMIN LOGIC
-    // ======================================================
-
     @Override
     public void borrowBook(int isbn) {
-        Book b = catalogue.search(isbn);    // Step 1: find book in BST catalogue
+        Book b = catalogue.search(isbn);   
 
         if (b != null) {
-            history.push(b);                // Step 2: push to borrowing history stack
-            catalogue.delete(isbn);         // Step 3: remove from catalogue (no longer available)
+            history.push(b);                
+            catalogue.delete(isbn);         
             System.out.println("  Successfully borrowed: \"" + b.getTitle() + "\"");
         } else {
             System.out.println("  Book not found. It may already be borrowed or doesn't exist.");
@@ -58,20 +50,17 @@ public class SmartLibrary implements LibraryADT {
 
     @Override
     public void returnBook(int isbn) {
-        Book b = history.remove(isbn);      // Step 1: find and remove from history stack
+        Book b = history.remove(isbn);      
 
         if (b != null) {
-            catalogue.insert(b.getIsbn(), b.getTitle(), b.getAuthor()); // Step 2: put back into BST
+            catalogue.insert(b.getIsbn(), b.getTitle(), b.getAuthor()); 
             System.out.println("  Successfully returned: \"" + b.getTitle() + "\"");
         } else {
             System.out.println("  This book is not in your borrowing history.");
         }
     }
 
-    // ======================================================
-    // END OF YOUR PART
-    // ======================================================
-
+   
     public void runMenu() {
         Scanner sc = new Scanner(System.in);
 
