@@ -8,5 +8,32 @@ package smartlibraryy;
  *
  * @author Legion
  */
-// Book.java
-public record Book(int isbn, String title, String author) {}
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class Book {
+    private int isbn;
+    private String title;
+    private String author;
+    
+    private boolean isBorrowed;
+    private Queue<String> waitlist;
+
+    public Book(int isbn, String title, String author) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+
+        this.isBorrowed = false;
+        this.waitlist = new LinkedList<>(); 
+    }
+
+    public int getIsbn() { return isbn; }
+    public String getTitle() { return title; }
+    public String getAuthor() { return author; }
+    
+    public boolean isBorrowed() { return isBorrowed; }
+    public void setBorrowed(boolean status) { this.isBorrowed = status; }
+    public Queue<String> getWaitlist() { return waitlist; }
+}

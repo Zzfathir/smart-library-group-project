@@ -8,9 +8,7 @@ package smartlibraryy;
  *
  * @author Legion
  */
-// BookBST.java
 class BookBST {
-
     private class TreeNode {
         Book book;
         TreeNode left, right;
@@ -25,8 +23,8 @@ class BookBST {
 
     private TreeNode ins(TreeNode r, Book b) {
         if (r == null) return new TreeNode(b);
-        if (b.isbn() < r.book.isbn()) r.left = ins(r.left, b);
-        else if (b.isbn() > r.book.isbn()) r.right = ins(r.right, b);
+        if (b.getIsbn() < r.book.getIsbn()) r.left = ins(r.left, b);
+        else if (b.getIsbn() > r.book.getIsbn()) r.right = ins(r.right, b);
         return r;
     }
 
@@ -36,13 +34,13 @@ class BookBST {
     }
 
     private TreeNode sea(TreeNode r, int isbn) {
-        if (r == null || r.book.isbn() == isbn) return r;
-        return (isbn < r.book.isbn()) ? sea(r.left, isbn) : sea(r.right, isbn);
+        if (r == null || r.book.getIsbn() == isbn) return r;
+        return (isbn < r.book.getIsbn()) ? sea(r.left, isbn) : sea(r.right, isbn);
     }
 
 
     public void recommendByAuthor(String author, int excludeIsbn) {
-        System.out.println("\n💡 SMART RECOMMENDATION: Other books by " + author + ":");
+        System.out.println("\n SMART RECOMMENDATION: Other books by " + author + ":");
         boolean[] found = {false};
         recSearch(root, author, excludeIsbn, found);
         if (!found[0]) System.out.println("   No other books found by this author.");
@@ -51,8 +49,8 @@ class BookBST {
     private void recSearch(TreeNode r, String author, int excludeIsbn, boolean[] found) {
         if (r != null) {
             recSearch(r.left, author, excludeIsbn, found);
-            if (r.book.author().equalsIgnoreCase(author) && r.book.isbn() != excludeIsbn) {
-                System.out.println("   -> " + r.book.title() + " (ISBN: " + r.book.isbn() + ")");
+            if (r.book.getAuthor().equalsIgnoreCase(author) && r.book.getIsbn() != excludeIsbn) {
+                System.out.println("   -> " + r.book.getTitle() + " (ISBN: " + r.book.getIsbn() + ")");
                 found[0] = true;
             }
             recSearch(r.right, author, excludeIsbn, found);

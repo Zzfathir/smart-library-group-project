@@ -4,35 +4,29 @@
  */
 package smartlibraryy;
 import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 /**
  *
  * @author Legion
  */
-// SmartLibrary.java
-import java.util.Scanner;
 
-// SmartLibrary.java
-import java.io.*;
-import java.util.*;
 
 class SmartLibrary implements LibraryADT {
     private BookBST catalogue = new BookBST();
     private BorrowStack history = new BorrowStack();
     
-    private HashSet<Integer> currentlyBorrowed = new HashSet<>();
-    private HashMap<Integer, Queue<String>> waitlists = new HashMap<>();
-    
     private final String FILE_NAME = "./src/smartlibraryy/books.csv";
 
     public SmartLibrary() {
-        loadFromCSV();
+        loadFromCSV(); 
     }
 
     @Override
     public void addBook(int isbn, String title, String author) {
         if (catalogue.search(isbn) == null) {
             catalogue.insert(new Book(isbn, title, author));
-            saveToCSV(isbn, title, author);
+            saveToCSV(isbn, title, author); 
             System.out.println("Book added & saved to database.");
         } else {
             System.out.println("Book with this ISBN already exists.");
@@ -43,8 +37,9 @@ class SmartLibrary implements LibraryADT {
     public void searchBook(int isbn) {
         Book b = catalogue.search(isbn);
         if (b != null) {
-            System.out.println("Found: " + b.title() + " by " + b.author());
-            catalogue.recommendByAuthor(b.author(), b.isbn());
+            System.out.println("Found: " + b.getTitle() + " by " + b.getAuthor());
+            System.out.println("Status: " + (b.isBorrowed() ? "Checked Out" : "Available"));
+            catalogue.recommendByAuthor(b.getAuthor(), b.getIsbn()); 
         } else {
             System.out.println("Not Found.");
         }
@@ -58,31 +53,35 @@ class SmartLibrary implements LibraryADT {
             return;
         }
 
-        if (currentlyBorrowed.contains(isbn)) {
-            waitlists.putIfAbsent(isbn, new LinkedList<>());
-            waitlists.get(isbn).add(studentName);
-            System.out.println("Book is currently checked out. " + studentName + " added to waitlist. Queue position: " + waitlists.get(isbn).size());
+        if (b.isBorrowed()) {
+            b.getWaitlist().add(studentName);
+            System.out.println("Book is currently checked out. " + studentName + " added to waitlist. Queue position: " + b.getWaitlist().size());
         } else {
-            currentlyBorrowed.add(isbn);
+            b.setBorrowed(true);
             history.push(b);
             System.out.println("Borrowed successfully by " + studentName + ".");
-            catalogue.recommendByAuthor(b.author(), b.isbn()); // Trigger Recommendation
+            catalogue.recommendByAuthor(b.getAuthor(), b.getIsbn()); 
         }
     }
 
     @Override
     public void returnBook(int isbn) {
-        if (currentlyBorrowed.remove(isbn)) {
+        Book b = catalogue.search(isbn);
+        
+        if (b != null && b.isBorrowed()) {
+            b.setBorrowed(false); // Book is officially returned
             System.out.println("Book returned.");
-            Queue<String> queue = waitlists.get(isbn);
-            if (queue != null && !queue.isEmpty()) {
-                String nextStudent = queue.poll();
-                currentlyBorrowed.add(isbn);
+            
+            // Check if anyone is waiting in this specific book's queue
+            Queue<String> queue = b.getWaitlist();
+            if (!queue.isEmpty()) {
+                String nextStudent = queue.poll(); // Removes the first person in line
+                b.setBorrowed(true); // Check it back out to them immediately
                 System.out.println("🔔 ALERT: Book automatically assigned to " + nextStudent + " from the waitlist!");
-                history.push(catalogue.search(isbn)); // Add to history for the new borrower
+                history.push(b); 
             }
         } else {
-            System.out.println("This book was not checked out.");
+            System.out.println("This book was not checked out, or does not exist.");
         }
     }
 

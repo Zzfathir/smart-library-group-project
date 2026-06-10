@@ -9,7 +9,6 @@ import java.util.Stack;
  *
  * @author raya
  */
-import java.util.Stack;
 
 public class BorrowStack {
     private Stack<Book> stack = new Stack<>();
@@ -22,16 +21,17 @@ public class BorrowStack {
         if (stack.isEmpty()) {
             System.out.println("History is empty.");
         } else {
+            System.out.println("--- Borrowing History (Most Recent First) ---");
             for (int i = stack.size() - 1; i >= 0; i--) {
                 Book b = stack.get(i);
-                System.out.println("[ISBN: " + b.isbn() + "] " + b.title());
+                System.out.println("[ISBN: " + b.getIsbn() + "] " + b.getTitle());
             }
         }
     }
 
     public Book remove(int isbn) {
         for (int i = stack.size() - 1; i >= 0; i--) {
-            if (stack.get(i).isbn() == isbn) {
+            if (stack.get(i).getIsbn() == isbn) {
                 return stack.remove(i);
             }
         }
