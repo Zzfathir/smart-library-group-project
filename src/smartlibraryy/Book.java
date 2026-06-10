@@ -8,22 +8,5 @@ package smartlibraryy;
  *
  * @author Legion
  */
-public class Book {
-    int isbn;
-    String title, author;
-    Book left, right;
-
-    public Book(int isbn, String title, String author) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-    }
-    
-    
-    //fathir: getter functions
-    public int getIsbn() {return isbn;}
-    
-    public String getTitle() {return title;}
-    
-    public String getAuthor() {return author;}
-}
+// Book.java
+public record Book(int isbn, String title, String author) {}

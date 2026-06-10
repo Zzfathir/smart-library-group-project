@@ -8,60 +8,54 @@ package smartlibraryy;
  *
  * @author Legion
  */
-public class BookBST {
-    private Book root;
+// BookBST.java
+class BookBST {
 
-    public void insert(int isbn, String title, String author) {
-        root = ins(root, isbn, title, author);
+    private class TreeNode {
+        Book book;
+        TreeNode left, right;
+        TreeNode(Book book) { this.book = book; }
     }
 
-    private Book ins(Book r, int i, String t, String a) {
-        if (r == null)
-            return new Book(i, t, a);
-        if (i < r.isbn) {
-            r.left = ins(r.left, i, t, a);
-        } else if (i > r.isbn) {
-            r.right = ins(r.right, i, t, a);
+    private TreeNode root;
+
+    public void insert(Book newBook) {
+        root = ins(root, newBook);
+    }
+
+    private TreeNode ins(TreeNode r, Book b) {
+        if (r == null) return new TreeNode(b);
+        if (b.isbn() < r.book.isbn()) r.left = ins(r.left, b);
+        else if (b.isbn() > r.book.isbn()) r.right = ins(r.right, b);
+        return r;
+    }
+
+    public Book search(int isbn) {
+        TreeNode result = sea(root, isbn);
+        return (result == null) ? null : result.book;
+    }
+
+    private TreeNode sea(TreeNode r, int isbn) {
+        if (r == null || r.book.isbn() == isbn) return r;
+        return (isbn < r.book.isbn()) ? sea(r.left, isbn) : sea(r.right, isbn);
+    }
+
+
+    public void recommendByAuthor(String author, int excludeIsbn) {
+        System.out.println("\n💡 SMART RECOMMENDATION: Other books by " + author + ":");
+        boolean[] found = {false};
+        recSearch(root, author, excludeIsbn, found);
+        if (!found[0]) System.out.println("   No other books found by this author.");
+    }
+
+    private void recSearch(TreeNode r, String author, int excludeIsbn, boolean[] found) {
+        if (r != null) {
+            recSearch(r.left, author, excludeIsbn, found);
+            if (r.book.author().equalsIgnoreCase(author) && r.book.isbn() != excludeIsbn) {
+                System.out.println("   -> " + r.book.title() + " (ISBN: " + r.book.isbn() + ")");
+                found[0] = true;
+            }
+            recSearch(r.right, author, excludeIsbn, found);
         }
-        return r;
-    }
-
-    public Book search(int i) {
-        return sea(root, i);
-    }
-
-    private Book sea(Book r, int i) {
-        if (r == null || r.isbn == i)
-            return r;
-        return (i < r.isbn) ? sea(r.left, i) : sea(r.right, i);
-    }
-
-    public void delete(int isbn) {
-        root = del(root, isbn);
-    }
-
-    private Book del(Book r, int isbn) {
-        if (r == null) return null;
-
-        if (isbn < r.isbn) {
-            r.left = del(r.left, isbn);
-        } else if (isbn > r.isbn) {
-            r.right = del(r.right, isbn);
-        } else {
-            if (r.left == null) return r.right;
-            if (r.right == null) return r.left;
-
-            Book successor = findMin(r.right);
-            r.isbn   = successor.isbn;
-            r.title  = successor.title;
-            r.author = successor.author;
-            r.right  = del(r.right, successor.isbn);
-        }
-        return r;
-    }
-
-    private Book findMin(Book r) {
-        while (r.left != null) r = r.left;
-        return r;
     }
 }
