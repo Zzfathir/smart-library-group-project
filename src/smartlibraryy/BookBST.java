@@ -4,9 +4,13 @@
  */
 package smartlibraryy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author hanif
+ * @author Taqaufa Sadiid Priya Prasetyo
  */
 class BookBST {
     private class TreeNode {
@@ -44,6 +48,37 @@ class BookBST {
             return r;
         return (isbn < r.book.getIsbn()) ? sea(r.left, isbn) : sea(r.right, isbn);
     }
+
+    public List<Book> searchByTitle(String title) {
+        List<Book> results = new ArrayList<>();
+        searchTitle(root, title.toLowerCase().trim(), results);
+        return results;
+    }
+ 
+    private void searchTitle(TreeNode r, String title, List<Book> results) {
+        if (r != null) {
+            searchTitle(r.left, title, results);
+            if (r.book.getTitle().toLowerCase().contains(title))
+                results.add(r.book);
+            searchTitle(r.right, title, results);
+        }
+    }
+ 
+    public List<Book> searchByAuthor(String author) {
+        List<Book> results = new ArrayList<>();
+        searchAuthor(root, author.toLowerCase().trim(), results);
+        return results;
+    }
+ 
+    private void searchAuthor(TreeNode r, String author, List<Book> results) {
+        if (r != null) {
+            searchAuthor(r.left, author, results);
+            if (r.book.getAuthor().toLowerCase().contains(author))
+                results.add(r.book);
+            searchAuthor(r.right, author, results);
+        }
+    }
+ 
 
     public void recommendByAuthor(String author, int excludeIsbn) {
         System.out.println("\n SMART RECOMMENDATION: Other books by " + author + ":");

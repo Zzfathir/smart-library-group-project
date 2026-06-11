@@ -7,6 +7,7 @@ package smartlibraryy;
 /**
  *
  * @author
+ * @author Taqaufa Sadiid Priya Prasetyo
  */
 public interface LibraryADT {
     void addBook(int isbn, String title, String author);
@@ -20,4 +21,8 @@ public interface LibraryADT {
     void searchBook(int isbn);
 
     void listAllBooks();
+
+    void findByTitle(String title);
+ 
+    void findByAuthor(String author);
 }

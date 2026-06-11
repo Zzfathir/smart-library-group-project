@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package smartlibraryy;
 
 import java.io.*;
@@ -10,16 +6,19 @@ import java.util.*;
 /**
  *
  * @author Legion
+ * @author Taqaufa Sadiid Priya Prasetyo 
  */
 
 class SmartLibrary implements LibraryADT {
     private BookBST catalogue = new BookBST();
     private BorrowStack history = new BorrowStack();
+    private RecordFinder finder;
 
     private final String FILE_NAME = "./src/smartlibraryy/books.csv";
 
     public SmartLibrary() {
         loadFromCSV();
+        finder = new RecordFinder(catalogue);
     }
 
     @Override
@@ -43,6 +42,16 @@ class SmartLibrary implements LibraryADT {
         } else {
             System.out.println("Not Found.");
         }
+    }
+
+    @Override
+    public void findByTitle(String title) {
+        finder.findByTitle(title);
+    }
+
+    @Override
+    public void findByAuthor(String author) {
+        finder.findByAuthor(author);
     }
 
     @Override
@@ -70,14 +79,13 @@ class SmartLibrary implements LibraryADT {
         Book b = catalogue.search(isbn);
 
         if (b != null && b.isBorrowed()) {
-            b.setBorrowed(false); // Book is officially returned
+            b.setBorrowed(false);
             System.out.println("Book returned.");
 
-            // Check if anyone is waiting in this specific book's queue
             Queue<String> queue = b.getWaitlist();
             if (!queue.isEmpty()) {
-                String nextStudent = queue.poll(); // Removes the first person in line
-                b.setBorrowed(true); // Check it back out to them immediately
+                String nextStudent = queue.poll();
+                b.setBorrowed(true);
                 System.out.println("🔔 ALERT: Book automatically assigned to " + nextStudent + " from the waitlist!");
                 history.push(b);
             }
@@ -141,7 +149,8 @@ class SmartLibrary implements LibraryADT {
             System.out.println("  4. Return Book");
             System.out.println("  5. View Borrowing History");
             System.out.println("  6. List All Books");
-            System.out.println("  7. Exit");
+            System.out.println("  7. Record Finder");
+            System.out.println("  8. Exit");
             System.out.println("=============================");
             int choice = getValidInt(sc, "Choice: ");
 
@@ -164,11 +173,32 @@ class SmartLibrary implements LibraryADT {
                 case 4 -> returnBook(getValidInt(sc, "Enter ISBN to return: "));
                 case 5 -> viewLatestHistory();
                 case 6 -> listAllBooks();
-                case 7 -> running = false;
+                case 7 -> recordFinderMenu(sc);
+                case 8 -> running = false;
                 default -> System.out.println("Invalid option.");
             }
         }
         sc.close();
+    }
+
+    private void recordFinderMenu(Scanner sc) {
+        System.out.println("\n--- Record Finder ---");
+        System.out.println("  1. Find by ISBN");
+        System.out.println("  2. Find by Title");
+        System.out.println("  3. Find by Author");
+        int choice = getValidInt(sc, "Choice: ");
+        switch (choice) {
+            case 1 -> finder.findByIsbn(getValidInt(sc, "Enter ISBN: "));
+            case 2 -> {
+                System.out.print("Enter Title: ");
+                findByTitle(sc.nextLine());
+            }
+            case 3 -> {
+                System.out.print("Enter Author: ");
+                findByAuthor(sc.nextLine());
+            }
+            default -> System.out.println("Invalid option.");
+        }
     }
 
     private int getValidInt(Scanner sc, String prompt) {
